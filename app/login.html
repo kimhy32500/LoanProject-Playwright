@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>루피뱅크 - 로그인</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h2>🔐 본인 인증</h2>
+        <div class="form-group visible">
+            <label>아이디</label>
+            <input type="text" id="input_id" placeholder="admin">
+        </div>
+        <div class="form-group visible">
+            <label>비밀번호</label>
+            <input type="password" id="input_pw" placeholder="1234">
+        </div>
+        <p id="login_error" style="display:none; color:red; text-align:center;">정보가 일치하지 않습니다.</p>
+        
+        <button class="btn" onclick="attemptLogin()">로그인 완료</button>
+        
+        <button class="btn btn-outline" onclick="location.href='index.html'" style="margin-top: 10px;">이전 화면으로</button>
+    </div>
+    <script>
+        function attemptLogin() {
+            const id = document.getElementById('input_id').value;
+            const pw = document.getElementById('input_pw').value;
+            if(id === "admin" && pw === "1234") {
+                // 기획서대로 index.html로 리다이렉트
+                location.href = "index.html?user=" + id;
+            } else {
+                document.getElementById('login_error').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>

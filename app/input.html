@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>루피뱅크 - 정보입력</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h2>📊 대출 심사 정보 입력</h2>
+        
+        <div class="form-group visible">
+            <label>직업 선택</label>
+            <select id="job" onchange="initJobSection()">
+                <option value="">-- 선택하세요 --</option>
+                <option value="officer">직장인 / 공무원</option>
+                <option value="business">개인사업자</option>
+                <option value="freelancer">프리랜서</option>
+                <option value="none">무직</option>
+            </select>
+        </div>
+
+        <div id="section_officer" class="form-section" style="display:none;">
+            <div id="step_off_1" class="form-group visible">
+                <label>직장명</label>
+                <input type="text" id="comp_name" placeholder="예: 루피건설" oninput="showNext('step_off_2', event)">
+            </div>
+            <div id="step_off_2" class="form-group">
+                <label>입사월</label>
+                <input type="month" onchange="showNext('section_common', event)">
+            </div>
+        </div>
+
+        <div id="section_business" class="form-section" style="display:none;">
+            <div id="step_biz_1" class="form-group visible">
+                <label>사업장명</label>
+                <input type="text" id="biz_name" placeholder="예: 루피카페" oninput="showNext('step_biz_2', event)">
+            </div>
+            <div id="step_biz_2" class="form-group">
+                <label>개업일</label>
+                <input type="date" onchange="showNext('section_common', event)">
+            </div>
+        </div>
+
+        <div id="section_health" class="form-section" style="display:none;">
+            <div id="step_health_1" class="form-group visible">
+                <label>건강보험 납부 구분</label>
+                <select id="health_type" onchange="showNext('section_common', event)">
+                    <option value="">-- 선택하세요 --</option>
+                    <option value="local">지역 가입자</option>
+                    <option value="dependent">피부양자</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="section_common" style="display:none; border-top: 1px dashed #ddd; padding-top: 20px; margin-top: 20px;">
+            <div class="form-group visible">
+                <label>연소득 (만원)</label>
+                <input type="number" id="income" placeholder="숫자만 입력" oninput="showNext('submit_area', event)">
+            </div>
+            <div id="submit_area" class="form-group">
+                <button class="btn" onclick="goToResult()">심사 신청하기</button>
+            </div>
+        </div>
+
+        <button class="btn btn-outline" onclick="goHome()">메인으로 돌아가기</button>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const user = params.get('user');
+
+        // [🔴 버그 3] 비인증 접근 차단 - alert 없이 즉시 리다이렉트
+        if (!user) {
+            location.href = "login.html";
+        }
+
+        // [🔴 버그 3 수정] initJobSection 누락 함수 추가
+        function initJobSection() {
+            const job = document.getElementById('job').value;
+
+            // 모든 섹션 및 하위 입력값 초기화
+            document.querySelectorAll('.form-section, #section_common').forEach(s => {
+                s.style.display = 'none';
+                s.querySelectorAll('input, select').forEach(i => i.value = '');
+            });
+            document.getElementById('submit_area').style.display = 'none';
+
+            // 직업별 섹션 노출
+            if (job === 'officer')                      document.getElementById('section_officer').style.display = 'block';
+            else if (job === 'business')                document.getElementById('section_business').style.display = 'block';
+            else if (job === 'freelancer' || job === 'none') document.getElementById('section_health').style.display = 'block';
+        }
+
+        // [🟡 버그 6 수정] event 파라미터 명시 수령 + input/select/date 타입별 조건 분리
+        function showNext(id, event) {
+            const el = document.getElementById(id);
+            if (!el) return;
+
+            const target = event.target;
+            const value  = target.value.trim();
+            const type   = target.type;   // "text" | "month" | "date" | "number" | "select-one"
+
+            let isValid = false;
+
+            if (target.tagName === 'SELECT') {
+                // select: 값이 선택되면 바로 통과
+                isValid = value !== '';
+            } else if (type === 'month' || type === 'date') {
+                // 날짜/월 선택: 값이 있으면 바로 통과
+                isValid = value !== '';
+            } else if (type === 'number') {
+                // 연소득: 숫자가 있으면 바로 통과 (음수 제출 방지는 goToResult에서)
+                isValid = value !== '';
+            } else {
+                // text: 2자 이상 입력 시 통과
+                isValid = value.length >= 2;
+            }
+
+            if (isValid) {
+                el.style.display = 'block';
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function goToResult() {
+            const incomeVal = parseInt(document.getElementById('income').value, 10);
+            if (isNaN(incomeVal) || incomeVal < 0) {
+                alert("정확한 소득을 입력해주세요.");
+                return;
+            }
+            // [🔴 버그 2] user 파라미터 결과 페이지까지 전달
+            location.href = `result.html?user=${user}&income=${incomeVal}`;
+        }
+
+        function goHome() {
+            // [🟡 버그 5] 메인 복귀 시 세션 유지
+            location.href = "index.html?user=" + user;
+        }
+    </script>
+</body>
+</html>

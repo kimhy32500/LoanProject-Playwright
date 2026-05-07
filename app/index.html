@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>루피뱅크 - 메인</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <div class="container">
+        <h2>🏦 루피 뱅크</h2>
+        <div id="auth_status" class="status-card" style="background:#f0f2f5; padding:20px; border-radius:10px; margin-bottom:20px; text-align:center;">
+            <p id="msg_guest">로그인이 필요한 서비스입니다.</p>
+            <p id="msg_user" style="display:none;">안녕하세요, <span id="user_id" style="font-weight:bold; color:#1a73e8;"></span>님!</p>
+        </div>
+        
+        <button id="btn_login" class="btn btn-outline" onclick="location.href='login.html'">로그인 하러가기</button>
+        <button id="btn_loan" class="btn" onclick="checkAuthAndGo()">신용대출 조회하기</button>
+        <button id="btn_logout" class="btn btn-outline" style="display:none; color:red; border-color:red;" onclick="logout()">로그아웃</button>
+    </div>
+
+    <script>
+        // URL 파라미터로 로그인 상태를 확인 (연습용 세션 관리)
+        const params = new URLSearchParams(window.location.search);
+        const user = params.get('user');
+
+        if(user) {
+            document.getElementById('msg_guest').style.display = 'none';
+            document.getElementById('msg_user').style.display = 'block';
+            document.getElementById('user_id').innerText = user;
+            document.getElementById('btn_login').style.display = 'none';
+            document.getElementById('btn_logout').style.display = 'block';
+        }
+
+        function checkAuthAndGo() {
+            if(user) {
+                location.href = `input.html?user=${user}`;
+            } else {
+                alert("로그인이 필요합니다. 로그인 화면으로 이동합니다.");
+                location.href = "login.html";
+            }
+        }
+
+        function logout() {
+            if(confirm("로그아웃 하시겠습니까?")) {
+                // 파라미터 없이 인덱스로 이동하여 세션 종료
+                location.href = "index.html";
+            }
+        }
+    </script>
+</body>
+</html>

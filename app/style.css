@@ -1,0 +1,114 @@
+/* 1. 기본 초기화 및 배경 설정 */
+body { 
+    font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; 
+    background: #f0f2f5; 
+    margin: 0;
+    padding: 20px; 
+    display: flex; 
+    justify-content: center; 
+    align-items: flex-start; /* 상단부터 정렬 */
+    min-height: 100vh;
+}
+
+/* 2. 메인 컨테이너 (카드 스타일) */
+.container { 
+    width: 100%; 
+    max-width: 500px; 
+    background: white; 
+    padding: 30px; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    box-sizing: border-box;
+}
+
+h2 { 
+    color: #1a73e8; 
+    text-align: center; 
+    margin-bottom: 25px; 
+}
+
+/* 3. 폼 요소 및 레이아웃 */
+.form-group { 
+    margin-bottom: 20px; 
+    display: none; /* 기본은 숨김 처리 (JS로 제어) */
+}
+
+.visible { 
+    display: block !important; /* 순차 노출용 클래스 */
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+input, select { 
+    width: 100%; 
+    padding: 12px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
+    font-size: 14px; 
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input:focus, select:focus {
+    border-color: #1a73e8;
+}
+
+/* 4. 버튼 스타일 (기본 및 변형) */
+.btn { 
+    width: 100%; 
+    padding: 15px; 
+    background: #1a73e8; 
+    color: white; 
+    border: none; 
+    border-radius: 8px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    font-weight: bold; 
+    margin-top: 10px; 
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    background: #1557b0;
+}
+
+/* 보조 버튼 (이전으로, 로그아웃 등) */
+.btn-outline {
+    background: white !important;
+    color: #1a73e8 !important;
+    border: 1px solid #1a73e8 !important;
+}
+
+.btn-outline:hover {
+    background: #f0f6ff !important;
+}
+
+/* 5. 상품 카드 및 결과 UI (result.html 용) */
+.product-card { 
+    border: 1px solid #e0e0e0; 
+    padding: 15px; 
+    margin-bottom: 12px; 
+    border-radius: 10px; 
+    cursor: pointer; 
+    transition: 0.3s; 
+}
+
+.product-card:hover { 
+    border-color: #1a73e8; 
+    background: #f8faff; 
+    transform: translateY(-2px); /* 살짝 떠오르는 효과 */
+}
+
+.status-card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
