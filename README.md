@@ -42,22 +42,16 @@ Playwright 기반의 웹 대출 시나리오 자동화 테스트 프로젝트입
 ---
 
 ## 3. 프로젝트 구조
-LoanProject_pw/
-├── app/                        # [Target] 테스트 대상 웹앱 (직접 제작)
-│   └── 대출조회_플로우차트.png   # 앱 비즈니스 로직 플로우차트
-├── playwright/
-│   ├── pages/                  # [POM] 페이지별 Selector & Action
-│   │   ├── main_page.py
-│   │   ├── login_page.py
-│   │   ├── loan_page.py
-│   │   └── result_page.py
-│   ├── tests/                  # [Scenario] 테스트 시나리오
-│   │   └── test_integration.py
-│   ├── capture/                # [Debug] 실패 시 자동 스크린샷 저장
-│   ├── conftest.py             # [Config] Fixture 및 훅 설정
-│   └── pytest.ini              # [Config] pytest 실행 옵션
-└── requirements.txt
-
+LoanProject-Playwright/
+├── app/                        # [Target] 테스트 대상 웹앱
+├── pages/                      # [POM] 페이지별 Selector & Action
+├── tests/                      # [Scenario] 테스트 시나리오
+├── capture/                    # [Debug] 실패 시 자동 스크린샷
+├── images/                     # [Doc] GIF 파일
+├── conftest.py
+├── pytest.ini
+├── requirements.txt
+└── .gitignore
 
 ---
 
@@ -108,8 +102,6 @@ playwright install
 ### pytest 기반 실행 (권장)
 
 ```bash
-cd playwright
-
 # 기본 실행
 pytest tests/test_integration.py
 

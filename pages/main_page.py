@@ -2,7 +2,7 @@ import os
 from playwright.sync_api import Page
 
 BASE_URL = os.path.abspath(
-    os.path.join(os.path.dirname(__file__), "../../app/index.html")
+    os.path.join(os.path.dirname(__file__), "../app/index.html")
 ).replace("\\", "/")
 
 class MainPage:
