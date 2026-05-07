@@ -83,7 +83,7 @@ LoanProject_pw/
 | 버전 | 내용 |
 |------|------|
 | v1 | 직업 유형별 개별 함수로 작성 (test_03~10) |
-
+| v2 | `pytest.mark.parametrize`로 8개 케이스 단일 함수로 통합 |
 
 ---
 
