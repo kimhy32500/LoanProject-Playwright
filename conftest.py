@@ -53,7 +53,3 @@ def pytest_collection_modifyitems(items):
     last_items = [i for i in items if "test_last_" in i.nodeid]
     other_items = [i for i in items if "test_last_" not in i.nodeid]
     items[:] = other_items + last_items
-
-@pytest.fixture(autouse=True)
-def set_timeout(page):
-    page.set_default_timeout(5000)

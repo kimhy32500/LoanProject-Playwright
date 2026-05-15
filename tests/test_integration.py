@@ -23,12 +23,19 @@ loan_test_cases = [
     ("none", "success"), ("none", "fail"),
 ]
 
-# 공통 로그인 보장 로직
+# 공통 로그인 로직
 def ensure_logged_in(main_page, login_page):
     main_page.navigate()
+    
+    # 로그인 버튼이 보이면 로그인 실행
     if main_page.login_btn.is_visible():
         main_page.click_login()
         login_page.login("admin", "1234")
+
+        # 신용대출 조회하기 버튼이 보이면 로그인 완료 확인
+        expect(main_page.loan_start_btn).to_be_visible(timeout=5000)
+
+        # 로그인 완료 상태면 다음 단계 실행
 
 # --- 시나리오 시작 ---
 def test_login_logout_cycle(main_page, login_page, page: Page):
@@ -166,7 +173,8 @@ def test_loan_process_integration(main_page, login_page, loan_page, result_page,
     03번부터 10번까지의 시나리오를 하나로 합친 통합 테스트입니다.
     데이터에 따라 성공/실패 화면을 스스로 판단하여 검증합니다.
     """
-    # [1] 로그인 상태 확인 및 대출 시작 페이지 진입
+    # [1] 로그인 상태 확인
+    # ensure_logged_in 내부에서 로그인 여부 상태 체크
     ensure_logged_in(main_page, login_page)
     data = LOAN_DATA[job_type]
     main_page.click_loan_start()
@@ -186,23 +194,31 @@ def test_loan_process_integration(main_page, login_page, loan_page, result_page,
     loan_page.submit_application()
 
     # [4] 결과 화면 판단 로직 (데이터 주권 기반)
+    # 1. '홈으로 이동' 버튼 체크
+    result_page.go_home_from_result.wait_for(state="visible", timeout=5000)
+        
+    # 2. 버튼이 보인다면 데이터와 대조
     if status == "success":
-    # 데이터가 success라면, 반드시 성공 카드가 보여야 함. 
-    # 만약 실패 화면이 뜨면 여기서 에러가 발생하며 테스트가 FAIL 되고 스크린샷이 찍힘.
-        expect(result_page.product_card).to_be_visible(timeout=5000)
-    
-        print(f"[{job_type}] 기대한 대로 대출 가능 결과 확인")
-
-        result_page.click_first_product()
-        result_page.apply_loan()
-        result_page.return_to_home_after_apply()
+        if result_page.product_card.is_visible():
+            print(f"[{job_type}] 성공 확인")
+            result_page.click_first_product()
+            result_page.apply_loan()
+            result_page.return_to_home_after_apply()
+        else:
+            # 성공이어야 하는데 카드가 없으므로 즉시 실패 처리
+            pytest.fail(f"[{job_type}] 데이터 오류: 성공이지만 상품 카드가 없음")
 
     elif status == "fail":
-        expect(result_page.fail_view).to_be_visible(timeout=5000)
-    
-        print(f"[{job_type}] 기대한 대로 대출 불가능 결과 확인")
+        if result_page.fail_view.is_visible():
+            print(f"[{job_type}] 거절 확인")
+            result_page.return_to_home_after_fail()
+        else:
+            # 실패여야 하는데 거절 문구가 없으므로 즉시 실패 처리
+            pytest.fail(f"[{job_type}] 데이터 오류: 실패지만 상품 카드 노출")
 
-        result_page.return_to_home_after_fail()
+    else:
+        # 3. 홈으로 이동 버튼 확인 불가 시 기다리지 않고 바로 실패 처리 (타임아웃 0의 효과)
+        pytest.fail(f"[{job_type}] 결과 화면 로딩 실패 또는 처리 지연")
 
 def test_last_final_logout(main_page, login_page, page: Page):
     ensure_logged_in(main_page, login_page)
