@@ -40,7 +40,7 @@ Playwright 기반의 웹 대출 시나리오 자동화 테스트 프로젝트입
 ![FlowChart](app/대출조회_플로우차트.png)
 
 ---
-
+```
 ## 3. 프로젝트 구조
 LoanProject-Playwright/
 ├── app/                        # [Target] 테스트 대상 웹앱
@@ -52,7 +52,7 @@ LoanProject-Playwright/
 ├── pytest.ini
 ├── requirements.txt
 └── .gitignore
-
+```
 ---
 
 ## 4. 테스트 케이스 구성
