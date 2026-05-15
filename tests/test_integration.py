@@ -206,7 +206,7 @@ def test_loan_process_integration(main_page, login_page, loan_page, result_page,
             result_page.return_to_home_after_apply()
         else:
             # 성공이어야 하는데 카드가 없으므로 즉시 실패 처리
-            pytest.fail(f"[{job_type}] 데이터 오류: 성공이지만 상품 카드가 없음")
+            pytest.fail(f"[{job_type}] 데이터 오류: 가능이지만 상품 카드가 없음")
 
     elif status == "fail":
         if result_page.fail_view.is_visible():
@@ -214,7 +214,7 @@ def test_loan_process_integration(main_page, login_page, loan_page, result_page,
             result_page.return_to_home_after_fail()
         else:
             # 실패여야 하는데 거절 문구가 없으므로 즉시 실패 처리
-            pytest.fail(f"[{job_type}] 데이터 오류: 실패지만 상품 카드 노출")
+            pytest.fail(f"[{job_type}] 데이터 오류: 거절이지만 상품 카드 노출")
 
     else:
         # 3. 홈으로 이동 버튼 확인 불가 시 기다리지 않고 바로 실패 처리 (타임아웃 0의 효과)
